@@ -1,0 +1,8 @@
+{
+  "replacementPatterns": [
+    {
+      "pattern": "^/",
+      "replacement": "https://github.com/JayPNW/EverquestLogWatcher/blob/main/"
+    }
+  ]
+}

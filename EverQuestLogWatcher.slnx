@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="EverQuestLogWatcher.Tests/EverQuestLogWatcher.Tests.csproj" />
+  <Project Path="EverQuestLogWatcher/EverQuestLogWatcher.csproj" />
+</Solution>
