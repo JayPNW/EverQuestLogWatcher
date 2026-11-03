@@ -57,8 +57,8 @@
 | `ShoutChatMessageFromSomeoneElse` | ` Elowen shouts, 'train to zone' ` | ` ^[^,]+ shouts, '.*'$ ` |
 | `ShoutChatMessageFromYou` | ` You shout, 'help' ` | ` ^You shout, '.*'$ ` |
 | `SkillImproved` | ` You have become better at Divination! (162) ` | ` ^You have become better at .+! \(\d+\)$ ` |
-| `SlainByPet` | `` A Valorian Guardian was slain by Bob`s pet! `` | `` ^.+ was slain by [^`]+`s pet!$ `` |
-| `SlainByWarder` | `` A Valorian Guardian was slain by Bob`s warder! `` | `` ^.+ was slain by [^`]+`s warder!$ `` |
+| `SlainByPet` | `` A Valorian Guardian was slain by Bob`s pet! `` | `` ^.+ was slain by (?<OwnerName>[^`]+)`s pet!$ `` |
+| `SlainByWarder` | `` A Valorian Guardian was slain by Bob`s warder! `` | `` ^.+ was slain by (?<OwnerName>[^`]+)`s warder!$ `` |
 | `SomeoneElseBecameGroupLeader` | ` Aldric is now the leader of your group. ` | ` ^.+ is now the leader of your group\.$ ` |
 | `SomeoneElseBeganCasting` | ` Brynna begins casting Cease. `<br>` Orin begins singing Guardian Rhythms. ` | ` ^.+ begins (?:casting\|singing) .+\.$ ` |
 | `SomeoneElseBeganCastingUnnamedSpell` | ` Brother Jentry begins to cast a spell. ` | ` ^.+ begins to cast a spell\.$ ` |

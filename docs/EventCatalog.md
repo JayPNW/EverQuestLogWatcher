@@ -30,11 +30,13 @@ These events are raised by an exact, unchanging log message.
 | `AutoFollowWorksBestInOpenAreasWarning` | ` Also, auto-follow works best in wide open areas with low lag.  Twisty areas, lag, and other factors may cause auto-follow to fail. ` |
 | `AwayFromKeyboardEnded` | ` You are no longer A.F.K. (Away From Keyboard). ` |
 | `AwayFromKeyboardStarted` | ` You are now A.F.K. (Away From Keyboard). ` |
+| `CampAbandonedLogEvent` | ` You abandon your preparations to camp. ` |
 | `CannotCastWhileStunned` : `CommandRejected` | ` You can't cast spells while stunned! ` |
 | `CannotForageWhileAttacking` : `CommandRejected` | ` You can't try to forage while attacking. ` |
 | `CannotPlaceContainerInContainer` : `CommandRejected` | ` You cannot place containers in containers. ` |
 | `CommandUnavailableRightNow` : `CommandRejected` | ` You can't use that command right now... ` |
 | `CommandUnavailableWhileCasting` : `CommandRejected` | ` You can't use that command while casting... ` |
+| `DailyResetLogEvent` | ` Fonts of unstable magic are erupting and receding in response to some nameless power. The magic is cascading throughout Norrath and into the Planes beyond. Hunt for the lands that have been most recently saturated with this magic to reap their many and varied resources. ` |
 | `DetrimentalSpellsNotAllowedHere` : `CommandRejected` | ` You cannot cast detrimental spells here. ` |
 | `EnteredAreaWhereBindAffinityIsAllowed` | ` You have entered an area where Bind Affinity is allowed. ` |
 | `EnteredAreaWhereLevitationDoesNotFunction` | ` You have entered an area where levitation effects do not function. ` |
@@ -146,8 +148,8 @@ These events are raised when a log line matches a regex.
 | `ShoutChatMessageFromSomeoneElse` | ` Elowen shouts, 'train to zone' ` | ` ^[^,]+ shouts, '.*'$ ` |
 | `ShoutChatMessageFromYou` | ` You shout, 'help' ` | ` ^You shout, '.*'$ ` |
 | `SkillImproved` | ` You have become better at Divination! (162) ` | ` ^You have become better at .+! \(\d+\)$ ` |
-| `SlainByPet` | `` A Valorian Guardian was slain by Bob`s pet! `` | `` ^.+ was slain by [^`]+`s pet!$ `` |
-| `SlainByWarder` | `` A Valorian Guardian was slain by Bob`s warder! `` | `` ^.+ was slain by [^`]+`s warder!$ `` |
+| `SlainByPet` | `` A Valorian Guardian was slain by Bob`s pet! `` | `` ^.+ was slain by (?<OwnerName>[^`]+)`s pet!$ `` |
+| `SlainByWarder` | `` A Valorian Guardian was slain by Bob`s warder! `` | `` ^.+ was slain by (?<OwnerName>[^`]+)`s warder!$ `` |
 | `SomeoneElseBecameGroupLeader` | ` Aldric is now the leader of your group. ` | ` ^.+ is now the leader of your group\.$ ` |
 | `SomeoneElseBeganCasting` | ` Brynna begins casting Cease. `<br>` Orin begins singing Guardian Rhythms. ` | ` ^.+ begins (?:casting\|singing) .+\.$ ` |
 | `SomeoneElseBeganCastingUnnamedSpell` | ` Brother Jentry begins to cast a spell. ` | ` ^.+ begins to cast a spell\.$ ` |

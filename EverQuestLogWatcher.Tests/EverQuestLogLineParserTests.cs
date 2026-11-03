@@ -167,4 +167,32 @@ public class EverQuestLogLineParserTests
 
         Assert.Same(SpellTextIndex.Empty, index);
     }
+
+    [Fact]
+    public void DailyResetMessageRaisesDailyResetLogEvent()
+    {
+        Assert.IsType<DailyResetLogEvent>(Parse("Fonts of unstable magic are erupting and receding in response to some nameless power. The magic is cascading throughout Norrath and into the Planes beyond. Hunt for the lands that have been most recently saturated with this magic to reap their many and varied resources."));
+    }
+
+    [Fact]
+    public void CampAbandonedMessageRaisesCampAbandonedLogEvent()
+    {
+        Assert.IsType<CampAbandonedLogEvent>(Parse("You abandon your preparations to camp."));
+    }
+
+    [Fact]
+    public void SlainByPetCapturesOwnerName()
+    {
+        var logEvent = Assert.IsType<SlainByPet>(Parse("A Valorian Guardian was slain by Bob`s pet!"));
+
+        Assert.Equal("Bob", logEvent.OwnerName);
+    }
+
+    [Fact]
+    public void SlainByWarderCapturesOwnerName()
+    {
+        var logEvent = Assert.IsType<SlainByWarder>(Parse("A Valorian Guardian was slain by Bob`s warder!"));
+
+        Assert.Equal("Bob", logEvent.OwnerName);
+    }
 }
