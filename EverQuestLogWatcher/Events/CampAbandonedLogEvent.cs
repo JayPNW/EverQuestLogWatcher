@@ -1,4 +1,4 @@
-namespace EverQuestLogWatcher;
+﻿namespace EverQuestLogWatcher;
 
 [LogLineLiteral(
 """You abandon your preparations to camp.""")]
