@@ -1,5 +1,8 @@
 # EverQuest Log Watcher
 
+[![Build and test](https://github.com/JayPNW/EverQuestLogWatcher/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/JayPNW/EverQuestLogWatcher/actions/workflows/build-and-test.yml)
+[![NuGet](https://img.shields.io/nuget/v/EverQuestLogWatcher.svg)](https://www.nuget.org/packages/EverQuestLogWatcher)
+
 Library to monitor Everquest logs with basic event detection and handling.
 
 Automatically identifies EQ log files from running `eqgame.exe` processes.
