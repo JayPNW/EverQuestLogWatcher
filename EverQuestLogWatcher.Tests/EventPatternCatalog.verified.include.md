@@ -1,4 +1,4 @@
-﻿| Event | Example messages | Regex or spell file match |
+﻿| Event | Example messages | Regex |
 |---|---|---|
 | `AbilityPointGained` | ` You have gained an ability point!  You now have 12 ability points. ` | ` ^You have gained an ability point!  You now have \d+ ability points?\.$ ` |
 | `AbilityStillOnCooldown` | ` You can use the ability Entrap again in 2 minute(s) 14 seconds. ` | ` ^You can use the ability .+ again in (?:\d+ minute\(s\) )?\d+ seconds?\.$ ` |
@@ -68,10 +68,7 @@
 | `SomeoneElsesSpellFizzled` | ` Brynna's Force of Piety spell fizzles! `<br>` Pell's spell fizzles! ` | ` ^(?!Your ).+'s (?:.+ )?spell fizzles!$ ` |
 | `SomeoneElsesSpellWasInterrupted` | ` Brynna's Cease spell is interrupted. ` | ` ^(?!Your ).+'s .+ spell is interrupted\.$ ` |
 | `SpellDamageDealtBySomeoneElse` | ` Lyra hit a Delve drake for 1305 points of cold damage by Water Elemental Strike IV. ` | ` ^(?!You ).+ hit .+ for \d+ points? of \w+ damage by .+\.$ ` |
-| `SpellEffectOnYouFaded` | ` The shimmer of runes fades. ` | `spells_us_str.txt` |
 | `SpellForgotten` | ` You forget Gate. ` | ` ^You forget .+\.$ ` |
-| `SpellLandedOnSomeoneElse` | ` A Delve drake is slashed by shards of ice. ` | `spells_us_str.txt` |
-| `SpellLandedOnYou` | ` Your mind eases with thoughts of tranquility. ` | `spells_us_str.txt` |
 | `SpellMemorizationBegan` | ` Beginning to memorize Bind Affinity... ` | ` ^Beginning to memorize .+\.\.\.$ ` |
 | `SpellMemorizationFinished` | ` You have finished memorizing Bind Affinity. ` | ` ^You have finished memorizing .+\.$ ` |
 | `SpellOnlyWorksOnCertainTargets` : `CommandRejected` | ` This spell only works on constructs or elementals. ` | ` ^This spell only works on .+\.$ ` |

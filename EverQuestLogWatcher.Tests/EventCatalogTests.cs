@@ -35,24 +35,36 @@ public class EventCatalogTests
     public Task CatalogOfEventsWithExamplesAndPatterns()
     {
         var markdown = new StringBuilder();
-        markdown.AppendLine("| Event | Example messages | Regex or spell file match |");
+        markdown.AppendLine("| Event | Example messages | Regex |");
         markdown.AppendLine("|---|---|---|");
         foreach (var eventType in ConcreteEventTypes)
         {
-            var eventNameWithAnyIntermediateBaseType = NameWithAnyIntermediateBaseType(eventType);
             var pattern = eventType.GetCustomAttribute<LogLinePatternAttribute>();
             if (pattern is not null and not LogLineLiteralAttribute)
             {
-                AppendRow(markdown, eventNameWithAnyIntermediateBaseType, pattern.ExampleMessages, AsMarkdownCode(pattern.RegexMatchingWholeMessage));
-            }
-
-            foreach (var spellFileMatch in eventType.GetCustomAttributes<MatchedBySpellFileTextAttribute>())
-            {
-                AppendRow(markdown, eventNameWithAnyIntermediateBaseType, [spellFileMatch.ExampleMessage], "`spells_us_str.txt`");
+                AppendRow(markdown, NameWithAnyIntermediateBaseType(eventType), pattern.ExampleMessages, AsMarkdownCode(pattern.RegexMatchingWholeMessage));
             }
         }
 
         return Verify(markdown.ToString(), extension: "include.md").UseFileName("EventPatternCatalog");
+    }
+
+    [Fact]
+    public Task CatalogOfEventsMatchedBySpellFileText()
+    {
+        var markdown = new StringBuilder();
+        markdown.AppendLine("| Event | Example message |");
+        markdown.AppendLine("|---|---|");
+        foreach (var eventType in ConcreteEventTypes)
+        {
+            var eventNameWithAnyIntermediateBaseType = NameWithAnyIntermediateBaseType(eventType);
+            foreach (var spellFileMatch in eventType.GetCustomAttributes<MatchedBySpellFileTextAttribute>())
+            {
+                AppendRow(markdown, eventNameWithAnyIntermediateBaseType, [spellFileMatch.ExampleMessage]);
+            }
+        }
+
+        return Verify(markdown.ToString(), extension: "include.md").UseFileName("EventSpellFileCatalog");
     }
 
     [Fact]
@@ -115,10 +127,11 @@ public class EventCatalogTests
         return $"`{eventType.Name}` : `{eventType.BaseType!.Name}`";
     }
 
-    static void AppendRow(StringBuilder markdown, string eventName, IEnumerable<string> exampleMessages, string matchDescription)
+    static void AppendRow(StringBuilder markdown, string eventName, IEnumerable<string> exampleMessages, string? matchDescription = null)
     {
         var examplesOnSeparateLines = string.Join("<br>", exampleMessages.Select(AsMarkdownCode));
-        markdown.AppendLine($"| {eventName} | {examplesOnSeparateLines} | {matchDescription} |");
+        var matchColumn = matchDescription is null ? "" : $" {matchDescription} |";
+        markdown.AppendLine($"| {eventName} | {examplesOnSeparateLines} |{matchColumn}");
     }
 
     static string AsMarkdownCode(string text)

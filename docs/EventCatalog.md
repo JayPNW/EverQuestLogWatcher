@@ -2,6 +2,18 @@
 
 Every event type this library can detect, with the log message(s) that trigger it.
 
+## Spells
+
+These events are raised when a log line exactly matches spell text loaded from `spells_us_str.txt` in your EverQuest install directory.
+
+<!-- include: EventSpellFileCatalog. path: /docs/EventSpellFileCatalog.include.md -->
+| Event | Example message |
+|---|---|
+| `SpellEffectOnYouFaded` | ` The shimmer of runes fades. ` |
+| `SpellLandedOnSomeoneElse` | ` A Delve drake is slashed by shards of ice. ` |
+| `SpellLandedOnYou` | ` Your mind eases with thoughts of tranquility. ` |
+<!-- endInclude -->
+
 ## Events matched by a fixed literal message
 
 These events are raised by an exact, unchanging log message.
@@ -72,10 +84,10 @@ These events are raised by an exact, unchanging log message.
 
 ## Events matched by a pattern
 
-These events are raised when a log line matches a regex (or, for spell effects, an entry in `spells_us_str.txt`).
+These events are raised when a log line matches a regex.
 
 <!-- include: EventPatternCatalog. path: /docs/EventPatternCatalog.include.md -->
-| Event | Example messages | Regex or spell file match |
+| Event | Example messages | Regex |
 |---|---|---|
 | `AbilityPointGained` | ` You have gained an ability point!  You now have 12 ability points. ` | ` ^You have gained an ability point!  You now have \d+ ability points?\.$ ` |
 | `AbilityStillOnCooldown` | ` You can use the ability Entrap again in 2 minute(s) 14 seconds. ` | ` ^You can use the ability .+ again in (?:\d+ minute\(s\) )?\d+ seconds?\.$ ` |
@@ -145,10 +157,7 @@ These events are raised when a log line matches a regex (or, for spell effects, 
 | `SomeoneElsesSpellFizzled` | ` Brynna's Force of Piety spell fizzles! `<br>` Pell's spell fizzles! ` | ` ^(?!Your ).+'s (?:.+ )?spell fizzles!$ ` |
 | `SomeoneElsesSpellWasInterrupted` | ` Brynna's Cease spell is interrupted. ` | ` ^(?!Your ).+'s .+ spell is interrupted\.$ ` |
 | `SpellDamageDealtBySomeoneElse` | ` Lyra hit a Delve drake for 1305 points of cold damage by Water Elemental Strike IV. ` | ` ^(?!You ).+ hit .+ for \d+ points? of \w+ damage by .+\.$ ` |
-| `SpellEffectOnYouFaded` | ` The shimmer of runes fades. ` | `spells_us_str.txt` |
 | `SpellForgotten` | ` You forget Gate. ` | ` ^You forget .+\.$ ` |
-| `SpellLandedOnSomeoneElse` | ` A Delve drake is slashed by shards of ice. ` | `spells_us_str.txt` |
-| `SpellLandedOnYou` | ` Your mind eases with thoughts of tranquility. ` | `spells_us_str.txt` |
 | `SpellMemorizationBegan` | ` Beginning to memorize Bind Affinity... ` | ` ^Beginning to memorize .+\.\.\.$ ` |
 | `SpellMemorizationFinished` | ` You have finished memorizing Bind Affinity. ` | ` ^You have finished memorizing .+\.$ ` |
 | `SpellOnlyWorksOnCertainTargets` : `CommandRejected` | ` This spell only works on constructs or elementals. ` | ` ^This spell only works on .+\.$ ` |
@@ -173,3 +182,4 @@ These events are raised when a log line matches a regex (or, for spell effects, 
 | `YourSpellWoreOffWithoutNamedTarget` | ` Your Mesmerize spell has worn off. ` | ` ^Your .+ spell has worn off\.$ ` |
 | `ZoneEntered` | ` You have entered The Plane of Tranquility. ` | ` ^You have entered (?<ZoneName>.+)\.$ ` |
 <!-- endInclude -->
+
