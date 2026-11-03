@@ -43,3 +43,7 @@ To work out which spell a message belongs to, the library reads `spells_us.txt` 
 
 There are many different possible event messages in EQ. This library detects some but many are just listed as "Unrecognized".
 If you are writing a tool that needs one of the Unknown events to be detected, open an Issue in this repo.
+
+## Event catalog
+
+See [docs/EventCatalog.md](docs/EventCatalog.md) for the full list of detected events and the messages that trigger them.
