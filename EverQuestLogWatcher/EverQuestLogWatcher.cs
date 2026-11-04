@@ -96,8 +96,7 @@ public class EverQuestLogWatcher
                         spellTextIndexByInstallDirectory[installDirectory] = spellTextIndex;
                     }
 
-                    var logFileExistedWhenWatchingStarted = isFirstDiscovery;
-                    var startAtBeginningOfFile = !logFileExistedWhenWatchingStarted || options.ReplayLinesAlreadyInLogWhenStarting;
+                    var startAtBeginningOfFile = isFirstDiscovery && options.ReplayLinesAlreadyInLogWhenStarting;
                     var follower = new LogFileFollower(logFilePath, startAtBeginningOfFile, options.PollingInterval);
                     followers.Add(ParseFollowedLinesAsync(follower, new EverQuestLogLineParser(character, spellTextIndex), events, cancellationToken));
                 }

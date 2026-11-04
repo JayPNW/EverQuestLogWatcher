@@ -31,7 +31,7 @@ await foreach (var logEvent in watcher.WatchAsync(new EverQuestLogWatcherOptions
 
 | Property                              | Description                                                                                                                                                                                                                      |
 |---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `ReplayLinesAlreadyInLogWhenStarting` | When false (the default), logs that exist when watching starts are followed from their current end. When true, they are read from their beginning. Log files created after watching starts are always read from their beginning. |
+| `ReplayLinesAlreadyInLogWhenStarting` | When false (the default), logs found when watching starts are followed from their current end. When true, they are read from their beginning. Logs found later, such as when EverQuest starts after watching does, are always followed from their current end. |
 | `PollingInterval`                     | How often to look for new clients, new log files and new lines.                                                                                                                                                                  |
 
 ## Spell parsing

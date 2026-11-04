@@ -30,13 +30,18 @@ public class EverQuestLogWatcherTests : IDisposable
         File.AppendAllText(Path.Combine(this.logsDirectory, logFileName), text);
     }
 
-    async Task<List<EverQuestLogEvent>> WatchUntilCountReached(EverQuestLogWatcherOptions options, int expectedEventCount, Func<Task> whileWatching)
+    Task<List<EverQuestLogEvent>> WatchUntilCountReached(EverQuestLogWatcherOptions options, int expectedEventCount, Func<Task> whileWatching)
+    {
+        return WatchUntilCountReached(options, expectedEventCount, whileWatching, () => [this.installDirectory]);
+    }
+
+    static async Task<List<EverQuestLogEvent>> WatchUntilCountReached(EverQuestLogWatcherOptions options, int expectedEventCount, Func<Task> whileWatching, Func<IReadOnlyList<string>> findEverQuestInstallDirectories)
     {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         var received = new List<EverQuestLogEvent>();
         var watching = Task.Run(async () =>
         {
-            await foreach (var logEvent in new EverQuestLogWatcher(() => [this.installDirectory]).WatchAsync(options, timeout.Token))
+            await foreach (var logEvent in new EverQuestLogWatcher(findEverQuestInstallDirectories).WatchAsync(options, timeout.Token))
             {
                 received.Add(logEvent);
                 if (received.Count == expectedEventCount)
@@ -93,15 +98,19 @@ public class EverQuestLogWatcherTests : IDisposable
     }
 
     [Fact]
-    public async Task LogFileCreatedAfterStartingIsFollowedFromItsBeginning()
+    public async Task LogFileFoundAfterStartingIsFollowedFromItsEnd()
     {
-        var received = await WatchUntilCountReached(OptionsWithFastPolling(replayLinesAlreadyInLog: false), 1, () =>
-        {
-            AppendToLog("eqlog_Brynna_fangbreaker.txt", "[Mon Sep 14 13:00:01 2026] You appear.\r\n");
-            return Task.CompletedTask;
-        });
+        AppendToLog("eqlog_Rowan_fangbreaker.txt", "[Mon Sep 14 13:00:00 2026] You vanish.\r\n");
+        var everQuestIsRunning = false;
 
-        Assert.Equal("Brynna", Assert.Single(received).Character.Name);
+        var received = await WatchUntilCountReached(OptionsWithFastPolling(replayLinesAlreadyInLog: false), 1, async () =>
+        {
+            everQuestIsRunning = true;
+            await Task.Delay(200);
+            AppendToLog("eqlog_Rowan_fangbreaker.txt", "[Mon Sep 14 13:00:01 2026] You appear.\r\n");
+        }, () => everQuestIsRunning ? [this.installDirectory] : []);
+
+        Assert.IsType<YouBecameVisible>(Assert.Single(received));
     }
 
     [Fact]
