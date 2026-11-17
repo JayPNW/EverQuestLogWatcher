@@ -16,4 +16,22 @@ public static class ReadmeExample
         }
         #endregion
     }
+
+    public static void WarnWhenEverQuestIsNotRunningOrLogging()
+    {
+        var watcher = new EverQuestLogWatcher();
+
+        #region CheckRunningAndLogging
+        var installs = watcher.FindRunningInstalls();
+        if (installs.Count == 0)
+        {
+            Console.WriteLine("EverQuest is not running.");
+        }
+
+        foreach (var install in installs.Where(i => !i.IsLoggingEnabled))
+        {
+            Console.WriteLine($"Logging is off for {install.InstallDirectory}. Type `/log on` in game.");
+        }
+        #endregion
+    }
 }

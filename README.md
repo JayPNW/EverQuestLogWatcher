@@ -14,7 +14,7 @@ Automatically identifies EQ log files from running `eqgame.exe` processes.
 ```cs
 var watcher = new EverQuestLogWatcher();
 
-await foreach (var logEvent in watcher.WatchAsync(new EverQuestLogWatcherOptions(), cancellationToken))
+await foreach (var logEvent in watcher.WatchAsync(new EverQuestLogWatcherOptions {/*...*/}))
 {
     if (logEvent is MobSlainByYou)
     {
@@ -33,6 +33,29 @@ await foreach (var logEvent in watcher.WatchAsync(new EverQuestLogWatcherOptions
 |---------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `ReplayLinesAlreadyInLogWhenStarting` | When false (the default), logs found when watching starts are followed from their current end. When true, they are read from their beginning. Logs found later, such as when EverQuest starts after watching does, are always followed from their current end. |
 | `PollingInterval`                     | How often to look for new clients, new log files and new lines.                                                                                                                                                                  |
+
+## Checking that EverQuest is running and logging
+
+The watcher only raises events while EverQuest is running with logging turned on. Use `FindRunningInstalls()` to check:
+
+<!-- snippet: CheckRunningAndLogging -->
+<a id='snippet-CheckRunningAndLogging'></a>
+```cs
+var installs = watcher.FindRunningInstalls();
+if (installs.Count == 0)
+{
+    Console.WriteLine("EverQuest is not running.");
+}
+
+foreach (var install in installs.Where(i => !i.IsLoggingEnabled))
+{
+    Console.WriteLine($"Logging is off for {install.InstallDirectory}. Type `/log on` in game.");
+}
+```
+<sup><a href='/EverQuestLogWatcher.Tests/ReadmeExample.cs#L24-L35' title='Snippet source file'>snippet source</a> | <a href='#snippet-CheckRunningAndLogging' title='Start of snippet'>anchor</a></sup>
+<!-- endSnippet -->
+
+`IsLoggingEnabled` is true when `eqclient.ini` contains `Log=1` or `Log=true`. It doesn't know about `/log on` typed in game.
 
 ## Spell parsing
 

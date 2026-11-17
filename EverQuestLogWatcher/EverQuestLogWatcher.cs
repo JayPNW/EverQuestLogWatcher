@@ -34,6 +34,15 @@ public class EverQuestLogWatcher
         this.findEverQuestInstallDirectories = findEverQuestInstallDirectories;
     }
 
+    /// <summary>
+    /// Finds the install directories of running EverQuest clients, and whether each has logging turned on.
+    /// An empty list means EverQuest is not running.
+    /// </summary>
+    public IReadOnlyList<RunningEverQuestInstall> FindRunningInstalls()
+    {
+        return [.. this.findEverQuestInstallDirectories().Select(RunningEverQuestInstall.FromInstallDirectory)];
+    }
+
     public async IAsyncEnumerable<EverQuestLogEvent> WatchAsync(EverQuestLogWatcherOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         options ??= new EverQuestLogWatcherOptions();

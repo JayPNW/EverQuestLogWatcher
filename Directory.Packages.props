@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Ini" Version="8.0.0" />
     <PackageVersion Include="Verify.XunitV3" Version="33.5.0" />
     <PackageVersion Include="xunit.v3" Version="4.0.3" />
   </ItemGroup>

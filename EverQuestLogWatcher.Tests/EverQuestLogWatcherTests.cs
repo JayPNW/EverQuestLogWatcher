@@ -114,6 +114,34 @@ public class EverQuestLogWatcherTests : IDisposable
     }
 
     [Fact]
+    public void NoRunningInstallsWhenEverQuestIsNotRunning()
+    {
+        Assert.Empty(new EverQuestLogWatcher(() => []).FindRunningInstalls());
+    }
+
+    [Fact]
+    public void LoggingIsOffWhenEqclientIniIsMissing()
+    {
+        var install = Assert.Single(new EverQuestLogWatcher(() => [this.installDirectory]).FindRunningInstalls());
+
+        Assert.Equal(new RunningEverQuestInstall(this.installDirectory, IsLoggingEnabled: false), install);
+    }
+
+    [Theory]
+    [InlineData("[Defaults]\r\nLog=1\r\n", true)]
+    [InlineData("[Defaults]\r\nLog=TRUE\r\n", true)]
+    [InlineData("[Defaults]\r\nLog=0\r\n", false)]
+    [InlineData("[Options]\r\nLog=1\r\n", false)]
+    public void LoggingIsReadFromEqclientIni(string eqclientIni, bool expectedIsLoggingEnabled)
+    {
+        File.WriteAllText(Path.Combine(this.installDirectory, "eqclient.ini"), eqclientIni);
+
+        var install = Assert.Single(new EverQuestLogWatcher(() => [this.installDirectory]).FindRunningInstalls());
+
+        Assert.Equal(expectedIsLoggingEnabled, install.IsLoggingEnabled);
+    }
+
+    [Fact]
     public void CharacterComesFromLogFileName()
     {
         Assert.Equal(new Character("Rowan", "fangbreaker"), Character.FromLogFileNameOrNull(@"C:\EQ\Logs\eqlog_Rowan_fangbreaker.txt"));
