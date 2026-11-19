@@ -142,6 +142,24 @@ public class EverQuestLogWatcherTests : IDisposable
     }
 
     [Fact]
+    public void EqclientIniCanBeReadWhileEverQuestHasItOpenForWriting()
+    {
+        var eqclientIniPath = Path.Combine(this.installDirectory, "eqclient.ini");
+        File.WriteAllText(eqclientIniPath, "[Defaults]\r\nLog=1\r\n");
+
+        using var heldByEverQuest = OpenLikeEverQuestDoes(eqclientIniPath);
+        var watcher = new EverQuestLogWatcher(() => [this.installDirectory]);
+
+        var install = Assert.Single(watcher.FindRunningInstalls());
+        Assert.True(install.IsLoggingEnabled);
+    }
+
+    static FileStream OpenLikeEverQuestDoes(string path)
+    {
+        return new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite | FileShare.Delete);
+    }
+
+    [Fact]
     public void CharacterComesFromLogFileName()
     {
         Assert.Equal(new Character("Rowan", "fangbreaker"), Character.FromLogFileNameOrNull(@"C:\EQ\Logs\eqlog_Rowan_fangbreaker.txt"));

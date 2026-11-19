@@ -19,7 +19,7 @@ public record RunningEverQuestInstall(string InstallDirectory, bool IsLoggingEna
             return false;
         }
 
-        using var stream = File.OpenRead(eqclientIniPath);
+        using var stream = new FileStream(eqclientIniPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
         var eqclientIni = new ConfigurationBuilder().AddIniStream(stream).Build();
         var value = eqclientIni["Defaults:Log"]?.Trim();
         return value == "1" || string.Equals(value, "true", StringComparison.OrdinalIgnoreCase);
