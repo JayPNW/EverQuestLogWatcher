@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, such as 0.1.0'
+        required: true
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Validate version
+        run: |
+          $version = '${{ inputs.version }}'
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Version '$version' must look like 1.2.3" }
+          if (git tag --list "v$version") { throw "Tag v$version already exists" }
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - run: ./build-and-test.cmd
+
+  publish:
+    needs: validate
+    uses: ./.github/workflows/_publish.yml
+    permissions:
+      id-token: write
+      contents: write
+    secrets: inherit
+    with:
+      version-property: Version=${{ inputs.version }}
+      github-release: true
