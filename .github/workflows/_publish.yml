@@ -12,6 +12,10 @@ on:
         required: false
         type: boolean
         default: false
+      ref:
+        description: 'Commit to publish; defaults to the triggering commit'
+        required: false
+        type: string
 
 jobs:
   publish:
@@ -21,6 +25,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.ref }}
       - uses: actions/setup-dotnet@v6
         with:
           global-json-file: global.json

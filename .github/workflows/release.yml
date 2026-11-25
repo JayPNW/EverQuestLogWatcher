@@ -10,6 +10,10 @@ on:
 jobs:
   validate:
     runs-on: windows-latest
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.record.outputs.sha }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -23,6 +27,20 @@ jobs:
         with:
           global-json-file: global.json
       - run: ./build-and-test.cmd
+      - name: Record version
+        id: record
+        shell: bash
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          sed -b -i "s|<VersionPrefix>.*</VersionPrefix>|<VersionPrefix>$VERSION</VersionPrefix>|" EverQuestLogWatcher/EverQuestLogWatcher.csproj
+          if ! git diff --quiet; then
+            git config user.name "Github Actions"
+            git config user.email actions@github.com
+            git commit -am ". r Release $VERSION"
+            git push origin "HEAD:$GITHUB_REF_NAME"
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
   publish:
     needs: validate
@@ -34,3 +52,26 @@ jobs:
     with:
       version-property: Version=${{ inputs.version }}
       github-release: true
+      ref: ${{ needs.validate.outputs.sha }}
+
+  bump-version:
+    needs: publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+      - name: Set VersionPrefix to the next patch version
+        env:
+          RELEASED: ${{ inputs.version }}
+        run: |
+          IFS=. read -r major minor patch <<< "$RELEASED"
+          next="$major.$minor.$((10#$patch + 1))"
+          sed -i "s|<VersionPrefix>.*</VersionPrefix>|<VersionPrefix>$next</VersionPrefix>|" EverQuestLogWatcher/EverQuestLogWatcher.csproj
+          git config user.name "Github Actions"
+          git config user.email actions@github.com
+          git commit -am ". r Bump version to $next after releasing $RELEASED"
+          git pull --rebase
+          git push
