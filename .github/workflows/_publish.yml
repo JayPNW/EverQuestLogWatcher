@@ -1,4 +1,4 @@
-name: Publish
+name: _Publish
 
 on:
   workflow_call:
