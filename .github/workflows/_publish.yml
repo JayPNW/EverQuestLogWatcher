@@ -1,0 +1,40 @@
+name: Publish
+
+on:
+  workflow_call:
+    inputs:
+      version-property:
+        description: 'MSBuild property that sets the version, such as Version=1.2.3 or VersionSuffix=ci.42'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: windows-latest
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+      - name: Build Release
+        run: dotnet build EverQuestLogWatcher.slnx -c Release -p:"${{ inputs.version-property }}"
+      - name: Pack
+        run: dotnet pack EverQuestLogWatcher.slnx -c Release -p:"${{ inputs.version-property }}" -o ./artifacts --no-build
+      - name: NuGet Login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+      - name: Push to NuGet.org
+        run: dotnet nuget push "artifacts\*.nupkg" --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      - name: Read version
+        run: |
+          $version = (Get-ChildItem ./artifacts/EverQuestLogWatcher.[0-9]*.nupkg | Select-Object -First 1).BaseName -replace '^EverQuestLogWatcher\.', ''
+          "VERSION=$version" >> $env:GITHUB_ENV
+      - name: Tag
+        run: |
+          git tag "v$env:VERSION"
+          git push origin "v$env:VERSION"
